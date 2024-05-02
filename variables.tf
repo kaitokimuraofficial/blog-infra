@@ -41,3 +41,22 @@ variable "aws_s3_bucket_key" {
 variable "aws_s3_bucket_region" {
   type = string
 }
+
+#############################################################
+# VPC
+#############################################################
+variable "aws_subnet_public" {
+  type = map(object({
+    cidr_block        = string
+    availability_zone = string
+    name              = string
+  }))
+  default = {
+    subnet_1a = {
+      cidr_block        = "10.0.1.0/24"
+      availability_zone = "ap-northeast-1a"
+      name              = "bastion-server-public"
+    }
+  }
+}
+

@@ -16,6 +16,7 @@ backend.hcl
 *.pub
 *_key
 
+.env
 node_modules
 
 .terraform.lock.hcl
