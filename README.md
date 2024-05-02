@@ -10,7 +10,6 @@ aws sts get-session-token \
 ```
 
 ## backendの設定を隠すために
-
 backend.hclにbackendに関する設定を記述し、
 ```md
 terraform init -backend-config=backend.hcl
@@ -19,5 +18,6 @@ terraform init -backend-config=backend.hcl
 
 
 # Ref
-
-[Terraform Registry](https://registry.terraform.io/namespaces/hashicorp)
+- [AWS Docs](https://docs.aws.amazon.com/ja_jp/)
+- [DevelopersIO](https://dev.classmethod.jp/)
+- [Terraform Registry](https://registry.terraform.io/namespaces/hashicorp)
