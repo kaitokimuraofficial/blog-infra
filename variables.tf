@@ -55,7 +55,7 @@ variable "aws_subnet_public" {
     subnet_1a = {
       cidr_block        = "10.0.1.0/24"
       availability_zone = "ap-northeast-1a"
-      name              = "bastion-server-public"
+      name              = "blog-infra-subnet-public"
     }
   }
 }
