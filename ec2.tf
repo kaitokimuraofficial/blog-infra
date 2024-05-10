@@ -10,7 +10,9 @@ resource "aws_instance" "main" {
   associate_public_ip_address = true
   key_name                    = aws_key_pair.ssh_key.key_name
 
-  vpc_security_group_ids = [aws_security_group.instance-main.id]
+  vpc_security_group_ids = [
+    aws_security_group.instance-main.id
+  ]
 
   user_data = file("scripts/instance-main.sh")
 
