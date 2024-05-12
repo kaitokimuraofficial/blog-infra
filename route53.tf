@@ -1,3 +1,13 @@
+resource "aws_acm_certificate" "public" {
+  domain_name               = data.aws_route53_zone.main.name
+  subject_alternative_names = ["*.${data.aws_route53_zone.main.name}"]
+  validation_method         = "DNS"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
 data "aws_route53_zone" "main" {
   name         = var.aws_domain_name
   private_zone = false
