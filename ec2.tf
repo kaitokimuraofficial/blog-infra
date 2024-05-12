@@ -4,7 +4,7 @@ resource "aws_key_pair" "ssh_key" {
 }
 
 resource "aws_instance" "main" {
-  ami                         = "ami-0bdd30a3e20da30a1"
+  ami                         = "ami-01bef798938b7644d"
   instance_type               = "t2.micro"
   subnet_id                   = aws_subnet.public.id
   associate_public_ip_address = true

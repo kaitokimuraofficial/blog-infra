@@ -24,6 +24,13 @@ terraform init -backend-config=backend.hcl
 を実行すると、backendの情報をコードに載せなくてもよくなるので安全。
 
 
+## ssh接続するために
+```md
+chmod 400 ec2-keypair
+ssh -i ~/.ssh/ec2-keypair ec2-user@ooxxooxx
+```
+
+
 # Ref
 - [AWS Docs](https://docs.aws.amazon.com/ja_jp/)
 - [DevelopersIO](https://dev.classmethod.jp/)

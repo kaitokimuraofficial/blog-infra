@@ -15,7 +15,7 @@ resource "aws_cloudwatch_dashboard" "main" {
               "EstimatedCharges",
             ]
           ]
-          period = 3600
+          period = 2592000
           stat   = "Average"
           region = "us-east-1"
           title  = "Total billing"
