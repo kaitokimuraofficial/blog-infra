@@ -18,5 +18,5 @@ resource "aws_route53_record" "www" {
   name    = "www.${var.aws_domain_name}"
   type    = "A"
   ttl     = "300"
-  records = [aws_instance.main.public_ip]
+  records = [aws_instance.frontend.public_ip]
 }
