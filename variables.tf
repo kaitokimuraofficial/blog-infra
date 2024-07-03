@@ -60,21 +60,6 @@ variable "aws_subnet_public" {
   }
 }
 
-variable "aws_subnet_public_dummy" {
-  type = map(object({
-    cidr_block        = string
-    availability_zone = string
-    name              = string
-  }))
-  default = {
-    subnet_1c = {
-      cidr_block        = "10.0.2.0/24"
-      availability_zone = "ap-northeast-1c"
-      name              = "blog-infra-subnet-public-dummy"
-    }
-  }
-}
-
 #############################################################
 # Route 53
 #############################################################

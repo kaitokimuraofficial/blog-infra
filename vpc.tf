@@ -22,19 +22,6 @@ resource "aws_subnet" "public" {
   }
 }
 
-resource "aws_subnet" "public_dummy" {
-  vpc_id = aws_vpc.main.id
-
-  availability_zone = var.aws_subnet_public_dummy.subnet_1c.availability_zone
-  cidr_block        = var.aws_subnet_public_dummy.subnet_1c.cidr_block
-
-  map_public_ip_on_launch = true
-
-  tags = {
-    Name = var.aws_subnet_public_dummy.subnet_1c.name
-  }
-}
-
 resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
 

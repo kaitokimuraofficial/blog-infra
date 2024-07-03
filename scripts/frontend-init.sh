@@ -1,5 +1,4 @@
 #!/bin/bash
 
-sudo apt update
-sudo apt install -y curl git vim nginx
-
+sudo yum update -y
+sudo yum install -y curl git vim nginx
