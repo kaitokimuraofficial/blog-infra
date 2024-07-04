@@ -13,6 +13,9 @@ variable "aws_session_token" {
 variable "aws_region" {
   type = string
 }
+variable "aws_account_id" {
+  type = string
+}
 
 #############################################################
 # CloudWatch

@@ -21,3 +21,5 @@ node_modules
 
 .terraform.lock.hcl
 terraform-study.iml
+
+scripts/init.sh
