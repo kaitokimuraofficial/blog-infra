@@ -28,7 +28,7 @@ resource "aws_iam_role" "oidc-role" {
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
 }
 
-resource "aws_iam_role_policy_attachment" "example_s3_readonly" {
+resource "aws_iam_role_policy_attachment" "example_policy" {
   role       = aws_iam_role.oidc-role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
 }
