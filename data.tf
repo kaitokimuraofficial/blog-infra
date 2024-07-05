@@ -6,3 +6,5 @@ data "aws_instance" "main" {
     values = ["blog-infra-instance-frontend"]
   }
 }
+
+data "aws_caller_identity" "self" {}
