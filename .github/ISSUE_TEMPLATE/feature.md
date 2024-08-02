@@ -1,14 +1,29 @@
-<!-- Template for issue of adding new features -->
-# Overview
+---
+name: Feature request
+about: Suggest an idea for this project
+title: ''
+labels: ''
+assignees: ''
+
+---
+
+## What
+**Describe the solution you'd like**
+<!-- A clear and concise description of what you want to happen. -->
+- [ ] first thing
+- [ ] second thing
 
 
-# Purpose
+## Why
+**Describe related problems**
+<!-- A clear and concise description of what the problem is. -->
 
 
-# Suggest
+## Others
+**Describe what you want to describe**
 
 
-# Tasks
-- [ ] xxooxxooxoxoxox
-- [ ] xxooxxooxoxoxox
-  - [ ] xxooxxooxoxoxox
+
+## Refs
+
+

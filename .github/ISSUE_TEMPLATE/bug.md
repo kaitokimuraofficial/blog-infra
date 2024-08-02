@@ -1,15 +1,22 @@
-<!-- Template for issue of fixing bugs -->
-# Overview
+---
+name: Bug
+about: Suggest an idea for this project
+title: ''
+labels: ''
+assignees: ''
+
+---
+
+## What
+**# When does the bug happen?**
 
 
-# When does the bug happen?
+
+## Others
+**Describe what you want to describe**
 
 
-# Why you wanna fix bugs?
 
+## Refs
 
-# Reason of bugs
-
-
-# Amendment
 
