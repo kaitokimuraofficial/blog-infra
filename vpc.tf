@@ -49,7 +49,7 @@ resource "aws_route_table_association" "public" {
   route_table_id = aws_route_table.public.id
 }
 
-resource "aws_security_group" "instance-main" {
+resource "aws_security_group" "instance_main" {
   vpc_id = aws_vpc.main.id
   name   = "blog-infra-instance-main-sg"
 

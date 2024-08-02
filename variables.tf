@@ -17,7 +17,7 @@ variable "aws_region" {
 #############################################################
 # CloudWatch
 #############################################################
-variable "cloudwatch-total-billing" {
+variable "cloudwatch_total_billing" {
   type    = number
   default = 8
 }

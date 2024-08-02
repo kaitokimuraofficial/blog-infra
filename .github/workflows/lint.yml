@@ -1,0 +1,21 @@
+name: Lint
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  Lint:
+    name: tflint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: tflint
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+          tflint --init
+          tflint

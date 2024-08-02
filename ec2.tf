@@ -17,7 +17,7 @@ resource "aws_instance" "frontend" {
   key_name                    = aws_key_pair.ssh_key.key_name
 
   vpc_security_group_ids = [
-    aws_security_group.instance-main.id
+    aws_security_group.instance_main.id
   ]
 
   user_data = file("scripts/frontend-init.sh")

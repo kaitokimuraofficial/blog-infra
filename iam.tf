@@ -39,7 +39,7 @@ data "aws_iam_policy_document" "github_actions_assume_role_policy" {
   }
 }
 
-resource "aws_iam_role" "oidc-role" {
+resource "aws_iam_role" "oidc_role" {
   name               = "oidc-role"
   assume_role_policy = data.aws_iam_policy_document.github_actions_assume_role_policy.json
 }
@@ -61,6 +61,6 @@ data "aws_iam_policy_document" "policy_document" {
 }
 
 resource "aws_iam_role_policy" "role_policy" {
-  role   = aws_iam_role.oidc-role.id
+  role   = aws_iam_role.oidc_role.id
   policy = data.aws_iam_policy_document.policy_document.json
 }

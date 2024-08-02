@@ -47,7 +47,7 @@ resource "aws_cloudwatch_dashboard" "main" {
   })
 }
 
-resource "aws_cloudwatch_metric_alarm" "total-billing" {
+resource "aws_cloudwatch_metric_alarm" "total_billing" {
   alarm_description   = "This metric monitors if total billing is over 8 USD or not."
   alarm_name          = "total-billing"
   comparison_operator = "GreaterThanOrEqualToThreshold"
@@ -57,5 +57,5 @@ resource "aws_cloudwatch_metric_alarm" "total-billing" {
   provider            = aws.us
   statistic           = "Maximum"
   period              = "21600"
-  threshold           = var.cloudwatch-total-billing
+  threshold           = var.cloudwatch_total_billing
 }
