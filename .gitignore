@@ -1,8 +1,12 @@
+# Ignore dotfiles
 .DS_Store
-**/.idea
+.idea
+.vs_code
+
 
 # Local .terraform directories
 **/.terraform/*
+
 
 # .tfstate files
 *.tfstate
@@ -22,4 +26,7 @@ node_modules
 .terraform.lock.hcl
 terraform-study.iml
 
+
+# Ignore local files
+memos
 scripts/init.sh
