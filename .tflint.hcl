@@ -13,7 +13,3 @@ plugin "terraform" {
     version = "0.9.0"
     source  = "github.com/terraform-linters/tflint-ruleset-terraform"
 }
-
-rule terraform_documented_variables {
-  enabled = false
-}
