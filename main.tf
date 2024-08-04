@@ -4,6 +4,7 @@
 resource "aws_instance" "main" {
   ami                         = "ami-03350e4f182961c7f"
   instance_type               = "t2.micro"
+  iam_instance_profile        = aws_iam_instance_profile.ec2_instace_main.id
   subnet_id                   = aws_subnet.subnets["private"].id
   associate_public_ip_address = true
   key_name                    = aws_key_pair.main.key_name
@@ -36,6 +37,31 @@ resource "aws_key_pair" "main" {
   }
 }
 
+resource "aws_iam_role" "ec2_instance_main" {
+  name               = "ec2_instance_blog_main"
+  assume_role_policy = data.aws_iam_policy_document.assume_role_ec2_instance_main.json
+}
+
+data "aws_iam_policy_document" "assume_role_ec2_instance_main" {
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["ec2.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "ec2_instace_main_ssm_mic" {
+  role       = aws_iam_role.ec2_instance_main.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
+resource "aws_iam_instance_profile" "ec2_instace_main" {
+  name = "ec2_instance_blog_main"
+  role = aws_iam_role.ec2_instance_main.name
+}
 
 ##############################################################
 # METRICS
