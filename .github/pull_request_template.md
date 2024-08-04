@@ -1,5 +1,5 @@
 ## What
-Close <!-- issue url -->
+Closes <!-- issue url -->
 
 **Describe the problems you solved or features you add**
 <!-- A clear and concise description of any problems you wanted to solve -->
