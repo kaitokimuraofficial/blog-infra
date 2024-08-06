@@ -479,8 +479,32 @@ resource "aws_db_instance" "main" {
   master_user_secret_kms_key_id = aws_kms_key.main.key_id
   username                      = "admin"
   skip_final_snapshot           = true
+  vpc_security_group_ids        = [aws_security_group.db_instance.id]
 
   tags = {
     Name = "main-${local.name_suffix}"
+  }
+}
+
+resource "aws_security_group" "db_instance" {
+  vpc_id = aws_vpc.main.id
+  name   = "main_db_instance"
+
+  ingress {
+    description = "MySQL/Aurora"
+    from_port   = 3306
+    to_port     = 3306
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "db-instance-main-${local.name_suffix}"
   }
 }
