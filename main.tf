@@ -432,27 +432,32 @@ resource "aws_s3_bucket_policy" "get_object" {
   policy = data.aws_iam_policy_document.get_object.json
 }
 
-resource "aws_secretsmanager_secret" "main_db_secret" {
+resource "aws_kms_key" "main" {
+  description             = "An main KMS key"
+  enable_key_rotation     = true
+  deletion_window_in_days = 20
+
   tags = {
-    Name = "main_db_secret-${local.name_suffix}"
+    Name = "main-${local.name_suffix}"
   }
 }
 
-data "aws_secretsmanager_random_password" "db_password" {
-  password_length    = 16
-  exclude_characters = false
-  exclude_numbers    = false
-  exclude_lowercase  = false
-  exclude_uppercase  = false
-  exclude_punctuation = true
-  include_space      = false
-}
-
-resource "aws_secretsmanager_secret_version" "db_secret_version" {
-  secret_id     = aws_secretsmanager_secret.main_db_secret.id
-  secret_string = jsonencode({
-    username = aws_db_instance.main.username
-    password = data.aws_secretsmanager_random_password.db_password.random_password
+resource "aws_kms_key_policy" "main" {
+  key_id = aws_kms_key.main.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Id      = "key-default-1"
+    Statement = [
+      {
+        Sid    = "Enable IAM User Permissions"
+        Effect = "Allow"
+        Principal = {
+          AWS = "arn:aws:iam::${data.aws_caller_identity.self.account_id}:root"
+        },
+        Action   = "kms:*"
+        Resource = "*"
+      }
+    ]
   })
 }
 
@@ -470,8 +475,9 @@ resource "aws_db_instance" "main" {
   engine                        = "mysql"
   engine_version                = "8.0"
   instance_class                = "db.t3.micro"
+  manage_master_user_password   = true
+  master_user_secret_kms_key_id = aws_kms_key.main.key_id
   username                      = "admin"
-  password = data.aws_secretsmanager_random_password.db_password.random_password
   skip_final_snapshot           = true
 
   tags = {
