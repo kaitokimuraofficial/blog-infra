@@ -42,7 +42,7 @@ variable "aws_subnets" {
       name                    = "public"
     },
     private = {
-      availability_zone       = "ap-northeast-1a"
+      availability_zone       = "ap-northeast-1c"
       cidr_block              = "10.0.2.0/24"
       map_public_ip_on_launch = false
       name                    = "private"
