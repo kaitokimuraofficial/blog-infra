@@ -55,10 +55,10 @@ data "aws_iam_policy_document" "assume_role_ec2_instance_main" {
 
 resource "aws_iam_role_policy_attachment" "ec2_instance_main_ssm_mic" {
   role       = aws_iam_role.ec2_instance_main.name
-  policy_arn = data.aws_iam_policy.systems_manager.arn
+  policy_arn = data.aws_iam_policy.policy_ssm_managed_instance_core.arn
 }
 
-data "aws_iam_policy" "systems_manager" {
+data "aws_iam_policy" "policy_ssm_managed_instance_core" {
   arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
@@ -230,6 +230,52 @@ resource "aws_security_group" "aws_instance_main" {
 
   tags = {
     Name = "aws-instance-main-${local.name_suffix}"
+  }
+}
+
+resource "aws_vpc_endpoint" "com_aws_region_ssm" {
+  vpc_id            = aws_vpc.main.id
+  service_name      = "com.amazonaws.ap-northeast-1.ssm"
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids = [
+    aws_security_group.ssm_vpc_endpoint.id,
+  ]
+
+  private_dns_enabled = true
+}
+
+resource "aws_vpc_endpoint" "com_aws_region_ec2_message" {
+  vpc_id            = aws_vpc.main.id
+  service_name      = "com.amazonaws.ap-northeast-1.ec2messages"
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids = [
+    aws_security_group.ssm_vpc_endpoint.id,
+  ]
+
+  private_dns_enabled = true
+}
+
+resource "aws_vpc_endpoint" "com_aws_region_ssm_message" {
+  vpc_id            = aws_vpc.main.id
+  service_name      = "com.amazonaws.ap-northeast-1.ssmmessages"
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids = [
+    aws_security_group.ssm_vpc_endpoint.id,
+  ]
+
+  private_dns_enabled = true
+}
+
+resource "aws_security_group" "ssm_vpc_endpoint" {
+  ingress {
+    description = "HTTPS"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
