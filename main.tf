@@ -489,11 +489,11 @@ resource "aws_s3_bucket_public_access_block" "backend" {
   restrict_public_buckets = true
 }
 
-data "aws_iam_policy_document" "get_object" {
+data "aws_iam_policy_document" "s3" {
   statement {
     principals {
       type        = "AWS"
-      identifiers = ["*"]
+      identifiers = ["${data.aws_caller_identity.self.account_id}"]
     }
     actions = [
       "s3:GetObject",
@@ -505,9 +505,9 @@ data "aws_iam_policy_document" "get_object" {
   }
 }
 
-resource "aws_s3_bucket_policy" "get_object" {
+resource "aws_s3_bucket_policy" "s3" {
   bucket = aws_s3_bucket.backend.id
-  policy = data.aws_iam_policy_document.get_object.json
+  policy = data.aws_iam_policy_document.s3.json
 }
 
 resource "aws_kms_key" "main" {
