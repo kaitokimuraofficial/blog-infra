@@ -266,6 +266,94 @@ resource "aws_security_group" "eic" {
   }
 }
 
+resource "aws_vpc_endpoint" "ssm" {
+  vpc_id              = aws_vpc.main.id
+  service_name        = "com.amazonaws.ap-northeast-1.ssm"
+  vpc_endpoint_type   = "Interface"
+  private_dns_enabled = true
+
+  policy = data.aws_iam_policy_document.ssm_vpc_endpoint.json
+
+  subnet_ids = [
+    aws_subnet.subnets["private"].id
+  ]
+  security_group_ids = [
+    aws_security_group.ssm_vpc_endpoint.id
+  ]
+
+  tags = {
+    Name = "private-subnet-ssm-${local.name_suffix}"
+  }
+}
+
+resource "aws_vpc_endpoint" "ssm_messages" {
+  vpc_id              = aws_vpc.main.id
+  service_name        = "com.amazonaws.ap-northeast-1.ssmmessages"
+  vpc_endpoint_type   = "Interface"
+  private_dns_enabled = true
+
+  policy = data.aws_iam_policy_document.ssm_vpc_endpoint.json
+
+  subnet_ids = [
+    aws_subnet.subnets["private"].id
+  ]
+  security_group_ids = [
+    aws_security_group.ssm_vpc_endpoint.id
+  ]
+
+  tags = {
+    Name = "private-subnet-ssm-messages-${local.name_suffix}"
+  }
+}
+
+resource "aws_vpc_endpoint" "ec2_messages" {
+  vpc_id              = aws_vpc.main.id
+  service_name        = "com.amazonaws.ap-northeast-1.ec2messages"
+  vpc_endpoint_type   = "Interface"
+  private_dns_enabled = true
+
+  policy = data.aws_iam_policy_document.ssm_vpc_endpoint.json
+
+  subnet_ids = [
+    aws_subnet.subnets["private"].id
+  ]
+  security_group_ids = [
+    aws_security_group.ssm_vpc_endpoint.id
+  ]
+
+  tags = {
+    Name = "private-subnet-ec2-messages-${local.name_suffix}"
+  }
+}
+
+resource "aws_security_group" "ssm_vpc_endpoint" {
+  vpc_id      = aws_vpc.main.id
+  description = "Security Group For SSM VPC EndPoint"
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "ssm-vpc-endpoint-${local.name_suffix}"
+  }
+}
+
+data "aws_iam_policy_document" "ssm_vpc_endpoint" {
+  statement {
+    actions   = ["*"]
+    resources = ["*"]
+    effect    = "Allow"
+    principals {
+      identifiers = ["*"]
+      type        = "*"
+    }
+  }
+}
+
 
 ##############################################################
 # IAM
