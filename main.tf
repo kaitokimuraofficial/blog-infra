@@ -7,7 +7,6 @@ resource "aws_instance" "main" {
   iam_instance_profile        = aws_iam_instance_profile.ec2_instance_main.name
   subnet_id                   = aws_subnet.subnets["private"].id
   associate_public_ip_address = false
-  key_name                    = aws_key_pair.main.key_name
 
   vpc_security_group_ids = [
     aws_security_group.aws_instance_main.id
@@ -26,14 +25,6 @@ data "aws_instance" "main" {
   filter {
     name   = "tag:Name"
     values = ["main-${local.name_suffix}"]
-  }
-}
-
-resource "aws_key_pair" "main" {
-  public_key = file("~/.ssh/ec2-keypair.pub")
-
-  tags = {
-    Name = "main-${local.name_suffix}"
   }
 }
 
