@@ -62,6 +62,15 @@ data "aws_iam_policy" "policy_ssm_managed_instance_core" {
   arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
+resource "aws_iam_role_policy_attachment" "s3_full_access" {
+  role       = aws_iam_role.ec2_instance_main.name
+  policy_arn = data.aws_iam_policy.s3_full_access.arn
+}
+
+data "aws_iam_policy" "s3_full_access" {
+  arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+}
+
 resource "aws_iam_instance_profile" "ec2_instance_main" {
   name = "ec2_instance_blog_main"
   role = aws_iam_role.ec2_instance_main.name
@@ -480,11 +489,11 @@ resource "aws_s3_bucket_public_access_block" "backend" {
   restrict_public_buckets = true
 }
 
-data "aws_iam_policy_document" "get_object" {
+data "aws_iam_policy_document" "s3" {
   statement {
     principals {
       type        = "AWS"
-      identifiers = ["*"]
+      identifiers = ["${data.aws_caller_identity.self.account_id}"]
     }
     actions = [
       "s3:GetObject",
@@ -496,9 +505,9 @@ data "aws_iam_policy_document" "get_object" {
   }
 }
 
-resource "aws_s3_bucket_policy" "get_object" {
+resource "aws_s3_bucket_policy" "s3" {
   bucket = aws_s3_bucket.backend.id
-  policy = data.aws_iam_policy_document.get_object.json
+  policy = data.aws_iam_policy_document.s3.json
 }
 
 resource "aws_kms_key" "main" {
