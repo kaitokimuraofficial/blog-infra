@@ -62,6 +62,15 @@ data "aws_iam_policy" "policy_ssm_managed_instance_core" {
   arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
+resource "aws_iam_role_policy_attachment" "s3_full_access" {
+  role       = aws_iam_role.ec2_instance_main.name
+  policy_arn = data.aws_iam_policy.s3_full_access.arn
+}
+
+data "aws_iam_policy" "s3_full_access" {
+  arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+}
+
 resource "aws_iam_instance_profile" "ec2_instance_main" {
   name = "ec2_instance_blog_main"
   role = aws_iam_role.ec2_instance_main.name
