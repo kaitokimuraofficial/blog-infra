@@ -6,7 +6,7 @@ resource "aws_instance" "main" {
   instance_type               = "t2.micro"
   iam_instance_profile        = aws_iam_instance_profile.ec2_instance_main.name
   subnet_id                   = aws_subnet.subnets["private"].id
-  associate_public_ip_address = true
+  associate_public_ip_address = false
   key_name                    = aws_key_pair.main.key_name
 
   vpc_security_group_ids = [
@@ -233,49 +233,36 @@ resource "aws_security_group" "aws_instance_main" {
   }
 }
 
-resource "aws_vpc_endpoint" "com_aws_region_ssm" {
-  vpc_id            = aws_vpc.main.id
-  service_name      = "com.amazonaws.ap-northeast-1.ssm"
-  vpc_endpoint_type = "Interface"
+resource "aws_ec2_instance_connect_endpoint" "aws_instance_main" {
+  subnet_id          = aws_subnet.subnets["private"].id
+  security_group_ids = [aws_security_group.eic.id]
+  preserve_client_ip = false
 
-  security_group_ids = [
-    aws_security_group.ssm_vpc_endpoint.id,
-  ]
-
-  private_dns_enabled = true
+  tags = {
+    Name = "aws-instance-main-${local.name_suffix}"
+  }
 }
 
-resource "aws_vpc_endpoint" "com_aws_region_ec2_message" {
-  vpc_id            = aws_vpc.main.id
-  service_name      = "com.amazonaws.ap-northeast-1.ec2messages"
-  vpc_endpoint_type = "Interface"
+resource "aws_security_group" "eic" {
+  vpc_id      = aws_vpc.main.id
+  description = "EIC Security Group For main EC2"
 
-  security_group_ids = [
-    aws_security_group.ssm_vpc_endpoint.id,
-  ]
-
-  private_dns_enabled = true
-}
-
-resource "aws_vpc_endpoint" "com_aws_region_ssm_message" {
-  vpc_id            = aws_vpc.main.id
-  service_name      = "com.amazonaws.ap-northeast-1.ssmmessages"
-  vpc_endpoint_type = "Interface"
-
-  security_group_ids = [
-    aws_security_group.ssm_vpc_endpoint.id,
-  ]
-
-  private_dns_enabled = true
-}
-
-resource "aws_security_group" "ssm_vpc_endpoint" {
   ingress {
-    description = "HTTPS"
-    from_port   = 443
-    to_port     = 443
+    from_port   = 22
+    to_port     = 22
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "eic-${local.name_suffix}"
   }
 }
 
