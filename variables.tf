@@ -1,4 +1,33 @@
 #############################################################
+# BACKEND
+#############################################################
+variable "s3_backend_bucket_name" {
+  type        = string
+  description = "The name of the S3 bucket storing backend"
+}
+
+variable "s3_main_bucket_name" {
+  type        = string
+  description = "The name of the S3 bucket named main"
+}
+
+variable "dynamodb_lock_name" {
+  type        = string
+  description = "The name of the DynamoDB table storing lock"
+}
+
+
+#############################################################
+# CLOUDWATCH
+#############################################################
+variable "total_billing" {
+  type        = number
+  description = "The number of total billing CloudWatch"
+  default     = 8
+}
+
+
+#############################################################
 # CREDENTIALS
 #############################################################
 variable "aws_region" {
@@ -14,16 +43,6 @@ variable "environment" {
 
 
 #############################################################
-# METRICS
-#############################################################
-variable "cloudwatch_total_billing" {
-  type        = number
-  description = "The number of total billing CloudWatch "
-  default     = 8
-}
-
-
-#############################################################
 # NETWORK
 #############################################################
 variable "aws_subnets" {
@@ -35,40 +54,23 @@ variable "aws_subnets" {
   }))
   description = "The setings of VPC subnets"
   default = {
-    public = {
+    public-1a = {
       availability_zone       = "ap-northeast-1a"
       cidr_block              = "10.0.1.0/24"
       map_public_ip_on_launch = true
-      name                    = "public"
+      name                    = "public-1a"
     },
-    private = {
+    public-1c = {
       availability_zone       = "ap-northeast-1c"
       cidr_block              = "10.0.2.0/24"
+      map_public_ip_on_launch = true
+      name                    = "public-1c"
+    },
+    private-1c = {
+      availability_zone       = "ap-northeast-1c"
+      cidr_block              = "10.0.4.0/24"
       map_public_ip_on_launch = false
-      name                    = "private"
+      name                    = "private-1c"
     }
   }
-}
-
-
-#############################################################
-# Route 53
-#############################################################
-variable "aws_domain_name" {
-  type        = string
-  description = "The domain name for AWS resources"
-}
-
-
-#############################################################
-# STORAGES
-#############################################################
-variable "aws_dynamo_locks_name" {
-  type        = string
-  description = "The name of the DynamoDB table used for locking"
-}
-
-variable "aws_s3_bucket_name" {
-  type        = string
-  description = "The name of the S3 bucket to be created"
 }

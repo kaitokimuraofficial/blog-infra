@@ -8,6 +8,16 @@ This repository is infra code storage for [kaitokimuraofficial/blog](https://git
 If you want to check my website, jump to [kaitokimura.com](http://www.kaitokimura.com)!
 If you have some questions, please ask me in [discussions](https://github.com/kaitokimuraofficial/blog-infra/discussions/)!
 
+## Architecture
+
+The diagram of the architecture actually built in this repository is stored in [images](/images).
+If you want to see how the architecture has evolved to its current state, please take a look.
+
+The current architecture is as follows.
+| `current architecture` |
+| -- |
+| ![current architecture](/images/0.1.0.png) |
+
 ## For Developing
 
 This repository uses Terraform. So, when developing this repository codes, documentations and websites below helps us a lot.
