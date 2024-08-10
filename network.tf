@@ -205,6 +205,49 @@ data "aws_iam_policy_document" "ssm_vpc_endpoint" {
   }
 }
 
+resource "aws_lb" "web" {
+  internal                   = false
+  load_balancer_type         = "application"
+  enable_deletion_protection = true
+
+  security_groups = [
+    aws_security_group.alb_web.id
+  ]
+
+  subnets = [
+    aws_subnet.subnets["public-1a"].id,
+    aws_subnet.subnets["public-1c"].id
+  ]
+
+  tags = {
+    Name = "web-${local.name_suffix}"
+  }
+}
+
+resource "aws_lb_target_group" "web" {
+  name        = "web"
+  port        = 80
+  protocol    = "HTTP"
+  target_type = "instance"
+  vpc_id      = aws_vpc.main.id
+}
+
+resource "aws_lb_target_group_attachment" "ec2_instance_web_server" {
+  target_group_arn = aws_lb_target_group.web.arn
+  target_id        = aws_instance.web_server.id
+}
+
+resource "aws_lb_listener" "web" {
+  load_balancer_arn = aws_lb.web.arn
+  port              = "80"
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.web.arn
+  }
+}
+
 resource "aws_security_group" "alb_web" {
   vpc_id      = aws_vpc.main.id
   description = "Security group for ALB named web"
