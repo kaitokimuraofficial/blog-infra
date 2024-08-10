@@ -71,3 +71,24 @@ data "aws_iam_policy_document" "ssm_send_command" {
     ]
   }
 }
+
+resource "aws_iam_role" "codedeploy_blog" {
+  name               = "codedeploy-blog"
+  assume_role_policy = data.aws_iam_policy_document.codedeploy_assume_role_policy.json
+}
+
+data "aws_iam_policy_document" "codedeploy_assume_role_policy" {
+  statement {
+    principals {
+      type        = "Service"
+      identifiers = ["codedeploy.amazonaws.com"]
+    }
+
+    actions = ["sts:AssumeRole"]
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "aws_codedeploy_role" {
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"
+  role       = aws_iam_role.codedeploy_blog.name
+}

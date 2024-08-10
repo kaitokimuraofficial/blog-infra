@@ -23,5 +23,9 @@ set -e
 
 dnf update -y
 
-dnf -y install git vim mariadb105
+dnf -y install git vim mariadb105 ruby wget
+
+wget https://aws-codedeploy-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/latest/install
+chmod +x ./install
+sudo ./install auto
 --//--
