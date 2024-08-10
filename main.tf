@@ -501,6 +501,23 @@ resource "aws_s3_bucket_policy" "s3" {
   policy = data.aws_iam_policy_document.s3.json
 }
 
+resource "aws_vpc_endpoint" "s3" {
+  vpc_id              = aws_vpc.main.id
+  service_name        = "com.amazonaws.ap-northeast-1.s3"
+  vpc_endpoint_type   = "Gateway"
+  private_dns_enabled = false
+
+  policy = data.aws_iam_policy_document.ssm_vpc_endpoint.json
+
+  route_table_ids = [
+    aws_route_table.main.id
+  ]
+
+  tags = {
+    Name = "s3-${local.name_suffix}"
+  } 
+}
+
 resource "aws_kms_key" "main" {
   description             = "An main KMS key"
   enable_key_rotation     = true
