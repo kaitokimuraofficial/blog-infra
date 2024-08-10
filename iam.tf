@@ -56,39 +56,18 @@ data "aws_iam_policy" "amazon_s3_full_access" {
   arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
 }
 
-resource "aws_ssm_document" "run_shell_deploy_ec2_main" {
-  name          = "SSM-RunShell-deploy-to-EC2-main"
-  document_type = "Session"
-  content = jsonencode({
-    schemaVersion = "1.0"
-    sessionType   = "Port"
-    inputs = {
-      runAsEnabled     = true
-      runAsDefaultUser = "github_actions_user"
-    }
-    properties = {
-      portNumber = "22"
-    }
-  })
+resource "aws_iam_role_policy" "ssm_send_command" {
+  role   = aws_iam_role.oidc_role_blog_deploy.id
+  policy = data.aws_iam_policy_document.ssm_send_command.json
 }
 
-data "aws_iam_policy_document" "ssm_start_and_terminate" {
+data "aws_iam_policy_document" "ssm_send_command" {
   statement {
     effect  = "Allow"
-    actions = ["ssm:StartSession"]
+    actions = ["ssm:SendCommand"]
     resources = [
-      "arn:aws:ec2:ap-northeast-1:${data.aws_caller_identity.self.account_id}:instance/${aws_instance.web_server.id}",
-      aws_ssm_document.run_shell_deploy_ec2_main.arn,
+      "arn:aws:ec2:${var.aws_region}:${data.aws_caller_identity.self.account_id}:instance/${aws_instance.web_server.id}",
+      "arn:aws:ssm:*:*:document/AWS-RunShellScript",
     ]
   }
-  statement {
-    effect    = "Allow"
-    actions   = ["ssm:TerminateSession"]
-    resources = ["arn:aws:ssm:*:*:session/*"]
-  }
-}
-
-resource "aws_iam_role_policy" "ssm_start_and_terminate" {
-  role   = aws_iam_role.oidc_role_blog_deploy.id
-  policy = data.aws_iam_policy_document.ssm_start_and_terminate.json
 }
