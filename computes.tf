@@ -25,15 +25,6 @@ data "aws_instance" "web_server" {
   }
 }
 
-resource "aws_iam_role" "ec2_session_s3_logging_role" {
-  name               = "ec2-session-s3-logging-role"
-  assume_role_policy = data.aws_iam_policy_document.ec2_assume_role.json
-
-  tags = {
-    Name = "ec2-session-s3-logging-${local.name_suffix}"
-  }
-}
-
 resource "aws_iam_instance_profile" "web_server" {
   name = "web-server"
   role = aws_iam_role.ec2_session_s3_logging_role.name
