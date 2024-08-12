@@ -3,6 +3,8 @@ name: Upload to lambda scripts
 on:
   workflow_dispatch:
   push:
+    branches:
+      - main
     paths:
       - lambda_functions/**
 
@@ -33,6 +35,7 @@ jobs:
     name: Upload to S3
     needs:
       - diff
+    if: ${{ needs.diff.outputs.matrix != '' }}
     strategy:
       matrix:
         file_name: ${{ fromJson(needs.diff.outputs.matrix) }}
@@ -53,3 +56,4 @@ jobs:
         uses: ./.github/actions/upload-lambda-script-to-S3
         with:
           file_name: ${{ matrix.file_name }}
+          s3_main: ${{ secrets.S3_MAIN }}

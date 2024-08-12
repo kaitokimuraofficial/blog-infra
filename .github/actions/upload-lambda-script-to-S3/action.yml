@@ -5,10 +5,13 @@ inputs:
   file_name:
     description: File name to be uploaded to S3
     required: true
+  s3_main:
+    description: S3 bucket name storing lambda scripts
+    required: true
 
 runs:
   using: "composite"
   steps:
     - name: Upload to S3
       shell: bash
-      run: aws s3 cp ${{ inputs.file_name }} s3://${{ secrets.S3_MAIN }}/${{ inputs.file_name }}
+      run: aws s3 cp ${{ inputs.file_name }} s3://${{ inputs.s3_main }}/${{ inputs.file_name }}
