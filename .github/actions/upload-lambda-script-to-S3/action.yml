@@ -1,0 +1,14 @@
+name: Upload lambda script to S3
+description: Action of uploading lambda script to S3
+
+inputs:
+  file_name:
+    description: File name to be uploaded to S3
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Upload to S3
+      shell: bash
+      run: aws s3 cp ${{ inputs.file_name }} s3://${{ secrets.S3_MAIN }}/${{ inputs.file_name }}

@@ -1,0 +1,55 @@
+name: Upload to lambda scripts
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - lambda_functions/**
+
+permissions:
+  contents: write
+  id-token: write
+
+env:
+  AWS_DEFAULT_REGION: ap-northeast-1
+  ROLE_TO_ASSUME: "arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/oidc-role-blog-deploy"
+
+jobs:
+  diff:
+    runs-on: ubuntu-latest
+    name: Diif lambda scripts
+    outputs:
+      matrix: ${{ steps.diff-and-transform.outputs.result }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/diff-and-transform-to-json
+        id: diff-and-transform
+        with:
+          DIRECTORY: "lambda_functions"
+
+  upload:
+    runs-on: ubuntu-latest
+    name: Upload to S3
+    needs:
+      - diff
+    strategy:
+      matrix:
+        file_name: ${{ fromJson(needs.diff.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 🔑 Setup AWS Credentials
+        uses: ./.github/actions/configure-aws-credentials
+        with:
+          aws-region: ${{ env.AWS_DEFAULT_REGION }}
+          role-to-assume: ${{ env.ROLE_TO_ASSUME }}
+
+      - name: 🧪 install AWS CLI
+        uses: ./.github/actions/install-aws-cli
+
+      - name: 🔥 Upload lambda script to S3
+        id: upload
+        uses: ./.github/actions/upload-lambda-script-to-S3
+        with:
+          file_name: ${{ matrix.file_name }}

@@ -1,0 +1,34 @@
+name: Diff and Transform to json
+description: Action to find differences in scripts within the specified directory and output the result in JSON format
+
+inputs:
+  directory:
+    description: Directory where this action searches for differences
+    required: true
+
+outputs:
+  result:
+    description: Result of differences in JSON format
+    value: ${{ steps.transform.outputs.result }}
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 2
+
+    - name: Find differences
+      id: diff
+      shell: bash
+      run: |
+        new_scripts=$(git diff --name-only HEAD~1 HEAD --diff-filter=AM | sed -n -E -e '/^${{ inputs.directory }}/p')
+        new_scripts=$(echo "$new_scripts" | tr '\n' ' ' | sed -e 's/ $//')
+        echo "NEW_SCRIPTS=$new_scripts" >> $GITHUB_ENV
+
+    - name: Transform to JSON format
+      id: transform
+      shell: bash
+      run: |
+        json_output=$(echo "${{ env.NEW_SCRIPTS }}" | tr '\n' ' ' | sed -e 's/ $//' | sed -e 's/ /", "/g' | sed -e 's/^/["/' -e 's/$/"]/')
+        echo "result=$json_output" >> $GITHUB_OUTPUT
