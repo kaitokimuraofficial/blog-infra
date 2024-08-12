@@ -13,7 +13,6 @@ permissions:
 env:
   AWS_DEFAULT_REGION: ap-northeast-1
   ROLE_TO_ASSUME: "arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/oidc-role-blog-deploy"
-  # COMMAND_TO_UPLOAD_LAMBDA_SCRIPT: ${{ secrets.COMMAND_TO_UPLOAD_LAMBDA_SCRIPT }}
 
 jobs:
   diff:
@@ -40,23 +39,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # - name: 🔑 Setup AWS Credentials
-      #   uses: ./.github/actions/configure-aws-credentials
-      #   with:
-      #     aws-region: ${{ env.AWS_DEFAULT_REGION }}
-      #     role-to-assume: ${{ env.ROLE_TO_ASSUME }}
+      - name: 🔑 Setup AWS Credentials
+        uses: ./.github/actions/configure-aws-credentials
+        with:
+          aws-region: ${{ env.AWS_DEFAULT_REGION }}
+          role-to-assume: ${{ env.ROLE_TO_ASSUME }}
 
-      # - name: 🧪 install AWS CLI
-      #   uses: ./.github/actions/install-aws-cli
+      - name: 🧪 install AWS CLI
+        uses: ./.github/actions/install-aws-cli
 
-      - name: echo
-        run: |
-          echo ${{ matrix.file_name }}
-
-      # - name: 🔥 Execute AWS command to upload to AWS Lambda scripts
-      #   id: exec
-      #   uses: ./.github/actions/execute-command
-      #   with:
-      #     command-to-be-executed: ${{ env.COMMAND_TO_UPLOAD_LAMBDA_SCRIPT }}
-
-      # json_output=$(echo "$new_scripts" | tr '\n' ' ' | sed -e 's/ $//' | sed -e 's/ /", "/g' | sed -e 's/^/["/' -e 's/$/"]/')
+      - name: 🔥 Upload lambda script to S3
+        id: upload
+        uses: ./.github/actions/upload-lambda-script-to-S3
+        with:
+          file_name: ${{ matrix.file_name }}
