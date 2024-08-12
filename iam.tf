@@ -50,6 +50,48 @@ data "aws_iam_policy_document" "ec2_assume_role" {
 
 
 ##########################################################
+# LAMBDA
+##########################################################
+resource "aws_iam_role" "lambda_blog" {
+  name               = "lambda-blog"
+  assume_role_policy = data.aws_iam_policy_document.lambda_assume_role.json
+}
+
+data "aws_iam_policy_document" "lambda_assume_role" {
+  statement {
+    effect = "Allow"
+
+    principals {
+      type        = "Service"
+      identifiers = ["lambda.amazonaws.com"]
+    }
+
+    actions = ["sts:AssumeRole"]
+  }
+}
+
+resource "aws_iam_role_policy" "lambda_blog" {
+  role   = aws_iam_role.lambda_blog.id
+  policy = data.aws_iam_policy_document.lambda_blog.json
+}
+
+data "aws_iam_policy_document" "lambda_blog" {
+  statement {
+    actions = [
+      "s3:GetObject",
+      "s3:PutObject",
+    ]
+    resources = ["arn:aws:s3:::${aws_s3_bucket.main.id}"]
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_blog_aws_lambda_basic_execution" {
+  role       = aws_iam_role.lambda_blog.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+
+##########################################################
 # OIDC PROVIDERS
 ##########################################################
 resource "aws_iam_role" "oidc_role_blog_deploy" {
