@@ -74,3 +74,12 @@ variable "aws_subnets" {
     }
   }
 }
+
+
+#############################################################
+# ROUTE 53
+#############################################################
+variable "domain_name" {
+  description = "The domain name of my website"
+  type        = string
+}
