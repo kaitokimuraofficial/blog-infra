@@ -60,6 +60,37 @@ data "aws_iam_policy_document" "for_s3_main" {
       "${aws_s3_bucket.main.arn}/*",
     ]
   }
+  statement {
+    principals {
+      type        = "AWS"
+      identifiers = [aws_iam_role.oidc_role_blog_deploy.arn]
+    }
+
+    actions = [
+      "s3:PutObject",
+    ]
+
+    resources = [
+      aws_s3_bucket.main.arn,
+      "${aws_s3_bucket.main.arn}/*",
+    ]
+  }
+  statement {
+    principals {
+      type        = "AWS"
+      identifiers = [aws_iam_role.lambda_blog.arn]
+    }
+
+    actions = [
+      "s3:GetObject",
+      "s3:PutObject",
+    ]
+
+    resources = [
+      aws_s3_bucket.main.arn,
+      "${aws_s3_bucket.main.arn}/*",
+    ]
+  }
 }
 
 resource "aws_db_instance" "data_storage_mysql" {
