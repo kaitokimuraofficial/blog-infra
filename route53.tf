@@ -29,3 +29,11 @@ resource "aws_route53_record" "my_domain" {
   type            = each.value.type
   zone_id         = aws_route53_zone.my_domain.zone_id
 }
+
+resource "aws_route53_record" "www" {
+  zone_id = aws_route53_zone.my_domain.zone_id
+  name    = "www.${var.domain_name}"
+  type    = "CNAME"
+  ttl     = 300
+  records = [aws_lb.web.dns_name]
+}
