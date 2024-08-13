@@ -278,17 +278,14 @@ resource "aws_security_group" "alb_web" {
   vpc_id      = aws_vpc.main.id
   description = "Security group for ALB named web"
 
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+  dynamic "ingress" {
+    for_each = local.security_gruop_alb_web
+    content {
+      from_port   = ingress.value[0]
+      to_port     = ingress.value[1]
+      protocol    = ingress.value[2]
+      cidr_blocks = ingress.value[3]
+    }
   }
 
   egress {

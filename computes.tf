@@ -34,26 +34,15 @@ resource "aws_security_group" "ec2_instance_web_server" {
   vpc_id      = aws_vpc.main.id
   description = "Security group for EC2 instance named web_server"
 
-  ingress {
-    description = "SSH"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  ingress {
-    description = "HTTP"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  ingress {
-    description = "HTTPS"
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+  dynamic "ingress" {
+    for_each = local.security_gruop_ingress_ec2_instance_web_server
+    content {
+      description = ingress.value[0]
+      from_port   = ingress.value[1]
+      to_port     = ingress.value[2]
+      protocol    = ingress.value[3]
+      cidr_blocks = ingress.value[4]
+    }
   }
 
   egress {

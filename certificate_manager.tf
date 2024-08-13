@@ -10,6 +10,6 @@ resource "aws_acm_certificate" "my_domain" {
   }
 
   tags = {
-    Name = "${var.domain_name}"
+    Name = var.domain_name
   }
 }
