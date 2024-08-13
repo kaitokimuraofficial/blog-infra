@@ -248,6 +248,32 @@ resource "aws_lb_listener" "web" {
   }
 }
 
+resource "aws_lb_target_group" "web_https" {
+  name        = "web-https"
+  port        = 443
+  protocol    = "HTTPS"
+  target_type = "instance"
+  vpc_id      = aws_vpc.main.id
+}
+
+resource "aws_lb_target_group_attachment" "ec2_instance_web_server_https" {
+  target_group_arn = aws_lb_target_group.web_https.arn
+  target_id        = aws_instance.web_server.id
+}
+
+resource "aws_lb_listener" "web_https" {
+  load_balancer_arn = aws_lb.web.arn
+  port              = 443
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  certificate_arn   = aws_acm_certificate.my_domain.arn
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.web_https.arn
+  }
+}
+
 resource "aws_security_group" "alb_web" {
   vpc_id      = aws_vpc.main.id
   description = "Security group for ALB named web"
