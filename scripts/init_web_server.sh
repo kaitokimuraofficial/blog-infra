@@ -31,4 +31,5 @@ sudo ./install auto
 dnf install -y nginx
 nginx -version
 sudo systemctl start nginx
+mkdir /tmp
 --//--
