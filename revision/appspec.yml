@@ -1,0 +1,34 @@
+version: 0.0
+os: linux 
+files:
+  - source: /
+    destination: /usr/share/html/nginx/html
+file_exists_behavior: OVERWRITE
+
+permissions:
+  - object: /usr/share/nginx/html
+    owner: root
+    group: root
+    mode: 755
+    type:
+      - directory
+  - object: /usr/share/nginx/html
+    owner: root
+    group: root
+    mode: 644
+    type:
+      - file
+
+hooks:
+  ApplicationStop:
+    - location: scripts/application_stop
+      timeout: 300
+      runas: root
+  BeforeInstall:
+    - location: scripts/before_install
+      timeout: 300
+      runas: root
+  ApplicationStart:
+    - location: scripts/application_start
+      timeout: 300
+      runas: root
