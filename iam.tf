@@ -19,6 +19,21 @@ data "aws_iam_policy_document" "codedeploy_assume_role_policy" {
   }
 }
 
+resource "aws_iam_role_policy" "codedeploy_blog" {
+  role   = aws_iam_role.codedeploy_blog.id
+  policy = data.aws_iam_policy_document.codedeploy_blog.json
+}
+
+data "aws_iam_policy_document" "codedeploy_blog" {
+  statement {
+    actions = [
+      "s3:Get*",
+      "s3:List*"
+    ]
+    resources = ["arn:aws:s3:::${aws_s3_bucket.main.id}"]
+  }
+}
+
 resource "aws_iam_role_policy_attachment" "aws_codedeploy_role" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"
   role       = aws_iam_role.codedeploy_blog.name
@@ -46,6 +61,29 @@ data "aws_iam_policy_document" "ec2_assume_role" {
       identifiers = ["ec2.amazonaws.com"]
     }
   }
+}
+
+resource "aws_iam_role_policy" "ec2_session_s3_logging_role" {
+  role   = aws_iam_role.ec2_session_s3_logging_role.id
+  policy = data.aws_iam_policy_document.ec2_session_s3_logging_role.json
+}
+
+data "aws_iam_policy_document" "ec2_session_s3_logging_role" {
+  statement {
+    actions = [
+      "codedeploy-commands-secure:GetDeploymentSpecification",
+      "codedeploy-commands-secure:PollHostCommand",
+      "codedeploy-commands-secure:PutHostCommandAcknowledgement",
+      "codedeploy-commands-secure:PutHostCommandComplete",
+    ]
+
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "ec2_session_s3_logging_role" {
+  policy_arn = "arn:aws:iam::aws:policy/AWSCodeDeployFullAccess"
+  role       = aws_iam_role.ec2_session_s3_logging_role.name
 }
 
 
