@@ -16,7 +16,7 @@ If you want to see how the architecture has evolved to its current state, please
 The current architecture is as follows.
 | `current architecture` |
 | -- |
-| ![current architecture](/images/0.1.1.png) |
+| ![current architecture](/images/0.1.2.png) |
 
 ## For Developing
 
