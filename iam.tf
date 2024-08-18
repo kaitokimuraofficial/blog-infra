@@ -155,8 +155,8 @@ data "aws_iam_policy_document" "gha_assume_role_policy" {
       test     = "StringLike"
       variable = "token.actions.githubusercontent.com:sub"
       values = [
-        "repo:kaitokimuraofficial/blog:ref:refs/heads/main",
-        "repo:kaitokimuraofficial/blog-infra:ref:refs/heads/*"
+        "repo:kaitokimuraofficial/blog:*",
+        "repo:kaitokimuraofficial/blog-infra:*"
       ]
     }
   }
