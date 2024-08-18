@@ -28,10 +28,10 @@ def lambda_handler(event, context):
     print(f'zip_path is {zip_path}.')
 
     with zipfile.ZipFile(zip_path, 'w') as zipf:
-        zipf.write(download_path, key)
+        zipf.write(download_path, os.path.basename(download_path))
         print(f'Zipped file to {zip_path}')
 
-    zip_key = f'{os.path.splitext(key)[0]}.zip'
+    zip_key = f'{os.path.splitext(os.path.basename(key))[0]}.zip'
     print(f'zip_key is {zip_key}')
     s3.upload_file(zip_path, bucket_name, zip_key)
   
