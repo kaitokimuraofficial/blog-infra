@@ -22,3 +22,7 @@ def lambda_handler(event, context):
 
     zip_path = '/tmp/revision.zip'
     print(f'zip_path is {zip_path}.')
+
+    with zipfile.ZipFile(zip_path, 'w') as zipf:
+        zipf.write(download_dir)
+        print(f'Zipped file to {zip_path}')
