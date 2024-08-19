@@ -13,7 +13,7 @@ resource "aws_s3_bucket_notification" "zip_lambda_functions" {
 
   lambda_function {
     lambda_function_arn = aws_lambda_function.zip_lambda_functions.arn
-    events              = ["s3:ObjectCreated:Put"]
+    events              = ["s3:ObjectCreated:*"]
     filter_prefix       = "lambda_functions/"
   }
 }
@@ -40,7 +40,7 @@ resource "aws_s3_bucket_notification" "make_revision" {
 
   lambda_function {
     lambda_function_arn = aws_lambda_function.make_revision.arn
-    events              = ["s3:ObjectCreated:Put"]
+    events              = ["s3:ObjectCreated:*"]
     filter_prefix       = "dist/"
   }
 }

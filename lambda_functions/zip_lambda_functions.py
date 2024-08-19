@@ -15,23 +15,24 @@ def lambda_handler(event, context):
         print(f'{key} is not .py file. So We are stopping function.')
         return
 
-    download_dir = '/tmp/lambda_functions'
+    download_dir = '/tmp'
+    base_name = os.path.basename(key)
     os.makedirs(download_dir, exist_ok=True)
 
-    download_path = os.path.join(download_dir, os.path.basename(key))
+    download_path = os.path.join(download_dir, base_name)
     print(f'download_path is {download_path}.')
 
     s3.download_file(bucket_name, key, download_path)
     print(f'Downloaded {bucket_name}/{key} to {download_path}.')
 
-    zip_path = f'/tmp/{os.path.splitext(key)[0]}.zip'
+    zip_path = f'/tmp/{os.path.splitext(base_name)[0]}.zip'
     print(f'zip_path is {zip_path}.')
 
     with zipfile.ZipFile(zip_path, 'w') as zipf:
-        zipf.write(download_path, os.path.basename(download_path))
+        zipf.write(download_path, arcname=base_name)
         print(f'Zipped file to {zip_path}')
 
-    zip_key = f'{os.path.splitext(os.path.basename(key))[0]}.zip'
+    zip_key = f'{os.path.splitext(key)[0]}.zip'
     print(f'zip_key is {zip_key}')
     s3.upload_file(zip_path, bucket_name, zip_key)
   
