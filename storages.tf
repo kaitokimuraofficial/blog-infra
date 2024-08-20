@@ -63,10 +63,11 @@ data "aws_iam_policy_document" "for_s3_main" {
   statement {
     principals {
       type        = "AWS"
-      identifiers = [aws_iam_role.oidc_role_blog_deploy.arn]
+      identifiers = [aws_iam_role.lambda_blog.arn]
     }
 
     actions = [
+      "s3:GetObject",
       "s3:PutObject",
     ]
 
@@ -78,11 +79,10 @@ data "aws_iam_policy_document" "for_s3_main" {
   statement {
     principals {
       type        = "AWS"
-      identifiers = [aws_iam_role.lambda_blog.arn]
+      identifiers = [aws_iam_role.oidc_role_blog_deploy.arn]
     }
 
     actions = [
-      "s3:GetObject",
       "s3:PutObject",
     ]
 

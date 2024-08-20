@@ -1,26 +1,6 @@
-data "archive_file" "zip_lambda_functions" {
-  type        = "zip"
-  source_file = "lambda_functions/zip_lambda_functions.py"
-  output_path = "lambda_functions/zip_lambda_functions.zip"
-}
-
-resource "aws_lambda_function" "zip_lambda_functions" {
-  function_name = "zip-lambda-functions"
-  role          = aws_iam_role.lambda_blog.arn
-  runtime       = "python3.12"
-  handler       = "zip_lambda_functions.lambda_handler"
-
-  filename         = data.archive_file.zip_lambda_functions.output_path
-  source_code_hash = data.archive_file.zip_lambda_functions.output_base64sha256
-}
-
-resource "aws_lambda_permission" "zip_lambda_functions" {
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.zip_lambda_functions.function_name
-  principal     = "s3.amazonaws.com"
-  source_arn    = aws_s3_bucket.main.arn
-}
-
+#############################################################
+# MAKE_REVISION
+#############################################################
 data "archive_file" "make_revision" {
   type        = "zip"
   source_file = "lambda_functions/make_revision.py"
@@ -40,6 +20,33 @@ resource "aws_lambda_function" "make_revision" {
 resource "aws_lambda_permission" "make_revision" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.make_revision.function_name
+  principal     = "s3.amazonaws.com"
+  source_arn    = aws_s3_bucket.main.arn
+}
+
+
+#############################################################
+# ZIP_LAMBDA_FUNCTIONS
+#############################################################
+data "archive_file" "zip_lambda_functions" {
+  type        = "zip"
+  source_file = "lambda_functions/zip_lambda_functions.py"
+  output_path = "lambda_functions/zip_lambda_functions.zip"
+}
+
+resource "aws_lambda_function" "zip_lambda_functions" {
+  function_name = "zip-lambda-functions"
+  role          = aws_iam_role.lambda_blog.arn
+  runtime       = "python3.12"
+  handler       = "zip_lambda_functions.lambda_handler"
+
+  filename         = data.archive_file.zip_lambda_functions.output_path
+  source_code_hash = data.archive_file.zip_lambda_functions.output_base64sha256
+}
+
+resource "aws_lambda_permission" "zip_lambda_functions" {
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.zip_lambda_functions.function_name
   principal     = "s3.amazonaws.com"
   source_arn    = aws_s3_bucket.main.arn
 }

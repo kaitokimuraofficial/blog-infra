@@ -199,7 +199,7 @@ data "aws_iam_policy_document" "ssm_send_command" {
   statement {
     actions = ["ssm:SendCommand"]
     resources = [
-      "arn:aws:ec2:${var.aws_region}:${data.aws_caller_identity.self.account_id}:instance/${aws_instance.web_server.id}",
+      aws_instance.web_server.arn,
       "arn:aws:ssm:*:*:document/AWS-RunShellScript",
     ]
   }
@@ -211,6 +211,6 @@ data "aws_iam_policy_document" "ssm_send_command" {
   }
   statement {
     actions   = ["s3:PutObject"]
-    resources = ["arn:aws:s3:::${aws_s3_bucket.main.id}"]
+    resources = ["arn:aws:s3:::${aws_s3_bucket.main.id}/ssm/*"]
   }
 }
