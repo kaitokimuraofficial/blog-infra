@@ -50,13 +50,13 @@ resource "aws_s3_bucket_notification" "main" {
   lambda_function {
     lambda_function_arn = aws_lambda_function.make_revision.arn
     events              = ["s3:ObjectCreated:*"]
-    filter_prefix       = "appspec.yml"
+    filter_prefix       = "revision/appspec.yml"
   }
 
   lambda_function {
     lambda_function_arn = aws_lambda_function.make_revision.arn
     events              = ["s3:ObjectCreated:*"]
-    filter_prefix       = "dist/"
+    filter_prefix       = "revision/dist/"
   }
 
   lambda_function {
@@ -68,6 +68,6 @@ resource "aws_s3_bucket_notification" "main" {
   lambda_function {
     lambda_function_arn = aws_lambda_function.make_revision.arn
     events              = ["s3:ObjectCreated:*"]
-    filter_prefix       = "scripts/"
+    filter_prefix       = "revision/scripts/"
   }
 }
