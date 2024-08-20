@@ -1,8 +1,10 @@
 version: 0.0
 os: linux 
 files:
-  - source: /
-    destination: /usr/share/html/nginx/html
+  - source: dist/assets/
+    destination: /usr/share/nginx/html/assets/
+  - source: dist/index.html
+    destination: /usr/share/nginx/html/
 file_exists_behavior: OVERWRITE
 
 permissions:
