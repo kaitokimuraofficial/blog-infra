@@ -31,9 +31,9 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "main" {
 resource "aws_s3_bucket_public_access_block" "main" {
   bucket                  = aws_s3_bucket.main.id
   block_public_acls       = true
-  block_public_policy     = true
+  block_public_policy     = false
   ignore_public_acls      = true
-  restrict_public_buckets = true
+  restrict_public_buckets = false
 }
 
 resource "aws_s3_bucket_policy" "for_s3_main" {
@@ -89,6 +89,20 @@ data "aws_iam_policy_document" "for_s3_main" {
     resources = [
       aws_s3_bucket.main.arn,
       "${aws_s3_bucket.main.arn}/*",
+    ]
+  }
+  statement {
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+
+    actions = [
+      "s3:GetObject",
+    ]
+
+    resources = [
+      "${aws_s3_bucket.main.arn}/blog-images/*",
     ]
   }
 }
