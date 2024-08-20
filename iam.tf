@@ -164,6 +164,31 @@ data "aws_iam_policy_document" "gha_assume_role_policy" {
   }
 }
 
+resource "aws_iam_role_policy" "oidc_role_blog_deploy" {
+  role   = aws_iam_role.oidc_role_blog_deploy.id
+  policy = data.aws_iam_policy_document.oidc_role_blog_deploy.json
+}
+
+data "aws_iam_policy_document" "oidc_role_blog_deploy" {
+  statement {
+    effect    = "Allow"
+    actions   = ["ecr:GetAuthorizationToken"]
+    resources = ["*"]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "ecr:CompleteLayerUpload",
+      "ecr:UploadLayerPart",
+      "ecr:InitiateLayerUpload",
+      "ecr:BatchCheckLayerAvailability",
+      "ecr:PutImage",
+    ]
+    resources = [aws_ecr_repository.blog.arn]
+  }
+}
+
 
 ##########################################################
 # SYSTEMS MANAGER (SESSION MANAGER)
