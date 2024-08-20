@@ -91,6 +91,20 @@ data "aws_iam_policy_document" "for_s3_main" {
       "${aws_s3_bucket.main.arn}/*",
     ]
   }
+  statement {
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+
+    actions = [
+      "s3:GetObject",
+    ]
+
+    resources = [
+      "${aws_s3_bucket.main.arn}/blog-images/*",
+    ]
+  }
 }
 
 resource "aws_db_instance" "data_storage_mysql" {
