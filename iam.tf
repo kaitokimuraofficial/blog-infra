@@ -88,6 +88,72 @@ resource "aws_iam_role_policy_attachment" "ec2_session_s3_logging_role" {
 
 
 ##########################################################
+# ECS
+##########################################################
+resource "aws_iam_role" "ecs_task_execution_blog" {
+  name               = "ecs-task-execution-blog"
+  assume_role_policy = data.aws_iam_policy_document.ecs_task_execution_assume_role.json
+
+  tags = {
+    Name = "ecs-task-execution-blog-${local.name_suffix}"
+  }
+}
+
+data "aws_iam_policy_document" "ecs_task_execution_assume_role" {
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["ecs-tasks.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_task_execution_role" {
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+  role       = aws_iam_role.ecs_task_execution_blog.name
+}
+
+resource "aws_iam_role" "ecs_task_blog" {
+  name               = "ecs-task-blog"
+  assume_role_policy = data.aws_iam_policy_document.ecs_task_assume_role.json
+
+  tags = {
+    Name = "ecs-task-blog-${local.name_suffix}"
+  }
+}
+
+data "aws_iam_policy_document" "ecs_task_assume_role" {
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["ecs-tasks.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_role_policy" "ecs_task_blog" {
+  role   = aws_iam_role.ecs_task_blog.id
+  policy = data.aws_iam_policy_document.ecs_task_blog.json
+}
+
+data "aws_iam_policy_document" "ecs_task_blog" {
+  statement {
+    actions = [
+      "ssm:GetParametersByPath",
+      "ssm:GetParameters",
+      "ssm:GetParameter",
+    ]
+
+    resources = ["*"]
+  }
+}
+
+
+##########################################################
 # LAMBDA
 ##########################################################
 resource "aws_iam_role" "lambda_blog" {
