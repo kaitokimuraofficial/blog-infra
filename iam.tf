@@ -115,6 +115,11 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_role" {
   role       = aws_iam_role.ecs_task_execution_blog.name
 }
 
+resource "aws_iam_role_policy_attachment" "ecs_task_execution_ec2_container_registry_read_only_role" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+  role       = aws_iam_role.ecs_task_execution_blog.name
+}
+
 resource "aws_iam_role" "ecs_task_blog" {
   name               = "ecs-task-blog"
   assume_role_policy = data.aws_iam_policy_document.ecs_task_assume_role.json
