@@ -256,7 +256,10 @@ data "aws_iam_policy_document" "oidc_role_blog_deploy" {
       "ecr:BatchCheckLayerAvailability",
       "ecr:PutImage",
     ]
-    resources = [aws_ecr_repository.blog.arn]
+    resources = [
+      aws_ecr_repository.blog_backend.arn,
+      aws_ecr_repository.blog_frontend.arn
+    ]
   }
 }
 

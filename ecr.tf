@@ -1,5 +1,5 @@
-resource "aws_ecr_repository" "blog" {
-  name                 = "blog"
+resource "aws_ecr_repository" "blog_backend" {
+  name                 = "blog-backend"
   image_tag_mutability = "IMMUTABLE"
 
   image_scanning_configuration {
@@ -7,8 +7,8 @@ resource "aws_ecr_repository" "blog" {
   }
 }
 
-resource "aws_ecr_lifecycle_policy" "blog" {
-  repository = aws_ecr_repository.blog.name
+resource "aws_ecr_lifecycle_policy" "blog_backend" {
+  repository = aws_ecr_repository.blog_backend.name
 
   policy = jsonencode(
     {
@@ -44,8 +44,8 @@ resource "aws_ecr_lifecycle_policy" "blog" {
   )
 }
 
-resource "aws_ecr_repository" "nginx" {
-  name                 = "nginx"
+resource "aws_ecr_repository" "blog_frontend" {
+  name                 = "blog-frontend"
   image_tag_mutability = "IMMUTABLE"
 
   image_scanning_configuration {
@@ -53,8 +53,8 @@ resource "aws_ecr_repository" "nginx" {
   }
 }
 
-resource "aws_ecr_lifecycle_policy" "nginx" {
-  repository = aws_ecr_repository.nginx.name
+resource "aws_ecr_lifecycle_policy" "blog_frontend" {
+  repository = aws_ecr_repository.blog_frontend.name
 
   policy = jsonencode(
     {

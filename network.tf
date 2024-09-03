@@ -252,6 +252,26 @@ resource "aws_vpc_endpoint" "ecr_dkr" {
   }
 }
 
+resource "aws_vpc_endpoint" "logs" {
+  vpc_id              = aws_vpc.main.id
+  service_name        = "com.amazonaws.ap-northeast-1.logs"
+  vpc_endpoint_type   = "Interface"
+  private_dns_enabled = true
+  policy              = data.aws_iam_policy_document.ssm_vpc_endpoint.json
+
+  subnet_ids = [
+    aws_subnet.subnets["private-1c"].id
+  ]
+
+  security_group_ids = [
+    aws_security_group.ssm_vpc_endpoint.id
+  ]
+
+  tags = {
+    Name = "logs-private-1c-${local.name_suffix}"
+  }
+}
+
 resource "aws_security_group" "ssm_vpc_endpoint" {
   vpc_id      = aws_vpc.main.id
   description = "Security group for SSM VPC endpoint"
@@ -317,17 +337,6 @@ resource "aws_lb_target_group_attachment" "ec2_instance_web_server" {
   target_id        = aws_instance.web_server.id
 }
 
-resource "aws_lb_listener" "web" {
-  load_balancer_arn = aws_lb.web.arn
-  port              = "80"
-  protocol          = "HTTP"
-
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.web.arn
-  }
-}
-
 resource "aws_lb_listener" "web_https" {
   load_balancer_arn = aws_lb.web.arn
   port              = 443
@@ -364,5 +373,25 @@ resource "aws_security_group" "alb_web" {
 
   tags = {
     Name = "alb-web-${local.name_suffix}"
+  }
+}
+
+resource "aws_lb_target_group" "blog_frontend" {
+  name            = "blog-frontend"
+  port            = 80
+  protocol        = "HTTP"
+  target_type     = "ip"
+  ip_address_type = "ipv4"
+  vpc_id          = aws_vpc.main.id
+}
+
+resource "aws_lb_listener" "blog_frontend" {
+  load_balancer_arn = aws_lb.web.arn
+  port              = "80"
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.blog_frontend.arn
   }
 }
