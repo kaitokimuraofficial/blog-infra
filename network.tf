@@ -59,40 +59,6 @@ resource "aws_route_table_association" "subnet_private_1c" {
   route_table_id = aws_route_table.main.id
 }
 
-resource "aws_ec2_instance_connect_endpoint" "web_server" {
-  subnet_id = aws_subnet.subnets["private-1c"].id
-  security_group_ids = [
-    aws_security_group.ec2_instance_connect_endpoint.id
-  ]
-  preserve_client_ip = false
-
-  tags = {
-    Name = "web-server-${local.name_suffix}"
-  }
-}
-
-resource "aws_security_group" "ec2_instance_connect_endpoint" {
-  vpc_id      = aws_vpc.main.id
-  description = "Security group for EC2 instance connect endpoint"
-
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  egress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "ec2-instance-connect-endpoint-${local.name_suffix}"
-  }
-}
-
 resource "aws_vpc_endpoint" "codedeploy" {
   vpc_id              = aws_vpc.main.id
   service_name        = "com.amazonaws.ap-northeast-1.codedeploy"
