@@ -133,26 +133,6 @@ resource "aws_vpc_endpoint" "codedeploy_commands_secure" {
   }
 }
 
-resource "aws_vpc_endpoint" "ec2_messages" {
-  vpc_id              = aws_vpc.main.id
-  service_name        = "com.amazonaws.ap-northeast-1.ec2messages"
-  vpc_endpoint_type   = "Interface"
-  private_dns_enabled = true
-  policy              = data.aws_iam_policy_document.ssm_vpc_endpoint.json
-
-  subnet_ids = [
-    aws_subnet.subnets["private-1c"].id
-  ]
-
-  security_group_ids = [
-    aws_security_group.ssm_vpc_endpoint.id
-  ]
-
-  tags = {
-    Name = "pec2-messages-private-1c-${local.name_suffix}"
-  }
-}
-
 resource "aws_vpc_endpoint" "ssm" {
   vpc_id              = aws_vpc.main.id
   service_name        = "com.amazonaws.ap-northeast-1.ssm"
