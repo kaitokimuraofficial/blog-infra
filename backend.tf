@@ -81,7 +81,7 @@ data "aws_iam_policy_document" "for_s3_backend" {
 
     resources = [
       aws_s3_bucket.backend.arn,
-      "${aws_s3_bucket.backend.arn}/*",
+      "${aws_s3_bucket.backend.arn}/global/s3/terraform.tfstate",
     ]
   }
 }
