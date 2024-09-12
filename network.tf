@@ -321,23 +321,3 @@ resource "aws_security_group" "alb_web" {
     Name = "alb-web-${local.name_suffix}"
   }
 }
-
-resource "aws_lb_target_group" "blog_frontend" {
-  name            = "blog-frontend"
-  port            = 80
-  protocol        = "HTTP"
-  target_type     = "ip"
-  ip_address_type = "ipv4"
-  vpc_id          = aws_vpc.main.id
-}
-
-resource "aws_lb_listener" "blog_frontend" {
-  load_balancer_arn = aws_lb.web.arn
-  port              = "80"
-  protocol          = "HTTP"
-
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.blog_frontend.arn
-  }
-}

@@ -66,28 +66,3 @@ resource "aws_ecs_task_definition" "blog_frontend" {
     Name = "blog-frontend-${local.name_suffix}"
   }
 }
-
-# resource "aws_ecs_service" "blog_frontend" {
-#   name = "blog-frontend"
-
-#   cluster       = aws_ecs_cluster.blog.name
-#   launch_type   = "FARGATE"
-#   desired_count = "1"
-#   health_check_grace_period_seconds = 200
-
-#   task_definition = aws_ecs_task_definition.blog_frontend.arn
-
-#   network_configuration {
-#     subnets = [
-#       aws_subnet.subnets["public-1a"].id,
-#       aws_subnet.subnets["public-1c"].id
-#     ]
-#     security_groups = [aws_security_group.alb_web.id]
-#   }
-
-#   load_balancer {
-#     target_group_arn = aws_lb_target_group.blog_frontend.arn
-#     container_name   = "blog-frontend"
-#     container_port   = "80"
-#   }
-# }
