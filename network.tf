@@ -158,46 +158,6 @@ resource "aws_vpc_endpoint" "s3" {
   }
 }
 
-resource "aws_vpc_endpoint" "ecr_api" {
-  vpc_id              = aws_vpc.main.id
-  service_name        = "com.amazonaws.ap-northeast-1.ecr.api"
-  vpc_endpoint_type   = "Interface"
-  private_dns_enabled = true
-  policy              = data.aws_iam_policy_document.ssm_vpc_endpoint.json
-
-  subnet_ids = [
-    aws_subnet.subnets["private-1c"].id
-  ]
-
-  security_group_ids = [
-    aws_security_group.ssm_vpc_endpoint.id
-  ]
-
-  tags = {
-    Name = "ecr-api-private-1c-${local.name_suffix}"
-  }
-}
-
-resource "aws_vpc_endpoint" "ecr_dkr" {
-  vpc_id              = aws_vpc.main.id
-  service_name        = "com.amazonaws.ap-northeast-1.ecr.dkr"
-  vpc_endpoint_type   = "Interface"
-  private_dns_enabled = true
-  policy              = data.aws_iam_policy_document.ssm_vpc_endpoint.json
-
-  subnet_ids = [
-    aws_subnet.subnets["private-1c"].id
-  ]
-
-  security_group_ids = [
-    aws_security_group.ssm_vpc_endpoint.id
-  ]
-
-  tags = {
-    Name = "ecr-dkr-private-1c-${local.name_suffix}"
-  }
-}
-
 resource "aws_vpc_endpoint" "logs" {
   vpc_id              = aws_vpc.main.id
   service_name        = "com.amazonaws.ap-northeast-1.logs"
