@@ -284,32 +284,3 @@ resource "aws_iam_role_policy_attachment" "ec2_s3_full_access" {
 data "aws_iam_policy" "amazon_s3_full_access" {
   arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
 }
-
-
-##########################################################
-# SYSTEMS MANAGER (RUN COMMAND)
-##########################################################
-resource "aws_iam_role_policy" "ssm_send_command" {
-  role   = aws_iam_role.oidc_role_blog_deploy.id
-  policy = data.aws_iam_policy_document.ssm_send_command.json
-}
-
-data "aws_iam_policy_document" "ssm_send_command" {
-  statement {
-    actions = ["ssm:SendCommand"]
-    resources = [
-      aws_instance.web_server.arn,
-      "arn:aws:ssm:*:*:document/AWS-RunShellScript",
-    ]
-  }
-  statement {
-    actions = ["ssm:ListCommandInvocations"]
-    resources = [
-      "arn:aws:ssm:${var.aws_region}:${data.aws_caller_identity.self.account_id}:*",
-    ]
-  }
-  statement {
-    actions   = ["s3:PutObject"]
-    resources = ["arn:aws:s3:::${aws_s3_bucket.main.id}/ssm/*"]
-  }
-}
