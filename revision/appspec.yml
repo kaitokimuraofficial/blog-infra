@@ -6,7 +6,7 @@ files:
     destination: /
   - source: dist/
     destination: /usr/share/nginx/html/
-  - source: files/nginx.conf
+  - source: files/
     destination: /etc/nginx/nginx.conf
 file_exists_behavior: OVERWRITE
 
