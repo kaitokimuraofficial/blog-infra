@@ -15,15 +15,23 @@ def lambda_handler(event, context):
     tmp_path = "/tmp"
     os.makedirs(tmp_path, exist_ok=True)
 
+    appspec_path = "revision/appspec.yml"
+    backend_path = "revision/backend/"
     dist_assets_path = "revision/dist/assets/"
     dist_index_path = "revision/dist/index.html"
-    appspec_path = "revision/appspec.yml"
+    nginx_conf_path = "revision/files/nginx.conf"
     scripts_path = "revision/scripts/"
 
-    file_names_to_zip = [appspec_path, dist_index_path]
+    file_names_to_zip = [appspec_path, dist_index_path, nginx_conf_path]
 
     # revision/assets/
     response = s3.list_objects_v2(Bucket=bucket_name, Prefix=dist_assets_path)
+    for obj in response["Contents"]:
+        tmp_key_name = obj["Key"]
+        file_names_to_zip.append(tmp_key_name)
+
+    # revision/backend/
+    response = s3.list_objects_v2(Bucket=bucket_name, Prefix=backend_path)
     for obj in response["Contents"]:
         tmp_key_name = obj["Key"]
         file_names_to_zip.append(tmp_key_name)
