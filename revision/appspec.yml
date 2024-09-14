@@ -1,36 +1,21 @@
 version: 0.0
 os: linux 
+# files section executes in INSTALL step.
 files:
-  - source: dist/assets/
-    destination: /usr/share/nginx/html/assets/
-  - source: dist/index.html
+  - source: backend/
+    destination: /
+  - source: dist/
     destination: /usr/share/nginx/html/
+  - source: files/nginx.conf
+    destination: /etc/nginx/nginx.conf
 file_exists_behavior: OVERWRITE
-
-permissions:
-  - object: /usr/share/nginx/html
-    owner: root
-    group: root
-    mode: 755
-    type:
-      - directory
-  - object: /usr/share/nginx/html
-    owner: root
-    group: root
-    mode: 644
-    type:
-      - file
 
 hooks:
   ApplicationStop:
     - location: scripts/application_stop
       timeout: 300
       runas: root
-  BeforeInstall:
-    - location: scripts/before_install
-      timeout: 300
-      runas: root
-  ApplicationStart:
-    - location: scripts/application_start
+  AfterInstall:
+    - location: scripts/after_install
       timeout: 300
       runas: root
