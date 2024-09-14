@@ -1,3 +1,4 @@
 #!/bin/bash
 
-blog &
+sudo systemctl start nginx
+nohup blog > /dev/null 2>&1 &
