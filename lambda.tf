@@ -24,24 +24,12 @@ resource "aws_s3_bucket_notification" "main" {
   lambda_function {
     lambda_function_arn = module.make_revision.arn
     events              = ["s3:ObjectCreated:*"]
-    filter_prefix       = "revision/appspec.yml"
-  }
-
-  lambda_function {
-    lambda_function_arn = module.make_revision.arn
-    events              = ["s3:ObjectCreated:*"]
-    filter_prefix       = "revision/dist/"
+    filter_prefix       = "revision/"
   }
 
   lambda_function {
     lambda_function_arn = module.zip_lambda_functions.arn
     events              = ["s3:ObjectCreated:*"]
     filter_prefix       = "lambda_functions/"
-  }
-
-  lambda_function {
-    lambda_function_arn = module.make_revision.arn
-    events              = ["s3:ObjectCreated:*"]
-    filter_prefix       = "revision/scripts/"
   }
 }
