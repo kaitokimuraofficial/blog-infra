@@ -1,6 +1,6 @@
 # Blog-infra
 
-- Website: http://www.kaitokimura.com
+- Website: http://www.kaitokimura.com (現在すでに停止中)
 - Documentation: [Blog-infra Documentations](main/docs/)
 
 This repository is infra code storage for [kaitokimuraofficial/blog](https://github.com/kaitokimuraofficial/blog/).
